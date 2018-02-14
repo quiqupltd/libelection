@@ -43,34 +43,27 @@ defmodule Election.Strategy.Kubernetes do
   end
 
   defp discover_nodes(config) do
-    app_name = Access.get(config, :kubernetes_node_basename)
-    selector = Access.get(config, :kubernetes_selector)
-
-    headers = [{'authorization', 'Bearer #{token()}'}]
-    http_options   = [ssl: [verify: :verify_none]]
-    endpoints_path = 'api/v1/namespaces/#{namespace()}/endpoints?labelSelector=#{selector}'
-    url = '#{base_url(config)}/#{endpoints_path}'
-
-    cond do
-      app_name != nil and selector != nil ->
-        case :httpc.request(:get, {url, headers}, http_options, []) do
-          {:ok, {{_version, 200, _status}, _headers, body}} ->
-            parse_response(app_name, Poison.decode!(body))
-          {:ok, {{_version, 403, _status}, _headers, body}} ->
-            %{"message" => msg} = Poison.decode!(body)
-            log :warn, :kubernetes, "cannot query kubernetes (unauthorized): #{msg}"
-            {:error, :unauthorized}
-          {:ok, {{_version, code, status}, _headers, body}} ->
-            log :warn, :kubernetes, "cannot query kubernetes (#{code} #{status}): #{inspect body}"
-            {:error, :invalid_response_status}
-          {:error, reason} -> {:error, reason}
-        end
-      :else ->
-        :something
+    with %{app_name: app_name, selector: selector} when not(is_nil(app_name)) and not(is_nil(selector)) <- %{
+        app_name: Access.get(config, :kubernetes_node_basename),
+        selector: Access.get(config, :kubernetes_selector)
+      },
+      endpoints_path <- 'api/v1/namespaces/#{namespace()}/endpoints?labelSelector=#{selector}',
+      url <- '#{base_url(config)}/#{endpoints_path}',
+      {:response, {:ok, body}} <- {:response, api_request(url)} do
+      parse_response(app_name, Poison.decode!(body))
+    else
+      %{app_name: app_name, selector: selector} when is_nil(app_name) or is_nil(selector) ->
+        log :warn, :kubernetes, "configuration value is nil, config: #{inspect config}"
+        {:error, :invalud_configuration}
+      {:response, {:error, %{message: :invalid_response_status, code: code, status: status, body: body}}} ->
+        log :warn, :kubernetes, "cannot query kubernetes (#{code} #{status}): #{inspect body}"
+      {:response, {:error, %{message: :unauthorized, body: body}}} ->
+        log :warn, :kubernetes, "cannot query kubernetes (unauthorized): #{inspect body}"
+        {:error, :unauthorized}
+      {:response, other} -> {:error, :invalid_response}
     end
   end
 
-  # TODO: Refactor for readability
   defp parse_response(app_name, resp) do
     case resp do
       %{"items" => []} -> []
@@ -80,6 +73,7 @@ defmodule Election.Strategy.Kubernetes do
           %{"subsets" => subsets}, acc ->
             addrs = Enum.flat_map(subsets, fn
               %{"addresses" => addresses} ->
+                # credo:disable-for-next-line Credo.Check.Refactor.Nesting
                 Enum.map(addresses, fn %{"ip" => ip, "targetRef" => %{"resourceVersion" => version}} ->
                   %{create_index: String.to_integer(version), node: :"#{app_name}@#{ip}"}
                 end)
@@ -107,6 +101,20 @@ defmodule Election.Strategy.Kubernetes do
     case File.exists?(path) do
       true  -> path |> File.read! |> String.trim()
       false -> ""
+    end
+  end
+
+  defp api_request(url) do
+    headers = [{'authorization', 'Bearer #{token()}'}]
+    http_options = [ssl: [verify: :verify_none]]
+
+    case :httpc.request(:get, {url, headers}, http_options, []) do
+      {:ok, {{_version, 200, _status}, _headers, body}} -> {:ok, body}
+      {:ok, {{_version, 403, _status}, _headers, body}} ->
+        {:error, %{message: :unauthorized, body: Poison.decode!(body)}}
+      {:ok, {{_version, code, status}, _headers, body}} ->
+        {:error, %{message: :invalid_response_status, code: code, status: status, body: body}}
+      {:error, reason} -> {:error, reason}
     end
   end
 

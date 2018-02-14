@@ -1,5 +1,5 @@
 defmodule Election.App do
-  @doc false
+  @moduledoc false
   use Application
 
   import Supervisor.Spec, warn: false
