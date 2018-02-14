@@ -9,6 +9,13 @@ defmodule Libelection.Mixfile do
      start_permanent: Mix.env == :prod,
      description: "Library to perform leader election in a cluster of containerized Elixir nodes",
      package: package(),
+     test_coverage: [tool: ExCoveralls],
+     preferred_cli_env: [
+       "coveralls": :test,
+       "coveralls.detail": :test,
+       "coveralls.post": :test,
+       "coveralls.travis": :test,
+       "coveralls.html": :test],
      docs: docs(),
      deps: deps()]
   end
@@ -33,7 +40,10 @@ defmodule Libelection.Mixfile do
     [{:poison, "~> 3.0"},
      {:ex_doc, "~> 0.13", only: :dev},
      {:dialyxir, "~> 0.3", only: :dev},
-     {:bypass, github: "PSPDFKit-labs/bypass", only: :test}]
+     {:credo, "~> 0.8", only: [:dev, :test]},
+     {:bypass, github: "PSPDFKit-labs/bypass", only: :test},
+     {:excoveralls, "~> 0.8", only: :test},
+     {:inch_ex, "~> 0.5", only: :docs}]
   end
 
   defp package do
