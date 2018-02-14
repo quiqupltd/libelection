@@ -15,9 +15,40 @@ def deps do
 end
 ```
 
+## Usage
+
+```elixir
+
+if Election.leader? do
+  # Code path executed only by the leader node
+else
+  # Code path executed by followers
+end
+```
+
+## How it works
+
+Polls the API of the configured container orchestration platform to determine the oldest node of the cluster.
+
+To configure the polling interval use:
+
+```elixir
+config :libelection, :polling_interval, 2_000 # 2 seconds
+```
+
+To configure the function which lists the node of the cluster use:
+
+```elixir
+config :libelection, :list_nodes, {module, function, args}
+# it can also be a function reference
+config :libelection, :list_nodes, &SomeModule.some_function/1
+```
+
 ## Election Strategies
 
 ### Rancher
+
+The [`create_index`](http://rancher.com/docs/rancher/v1.2/en/rancher-services/metadata-service/#container) identifier is used to pick the leader.
 
 ```elixir
 config :libelection,
@@ -26,6 +57,9 @@ config :libelection,
 ```
 
 ### Kubernetes
+
+The [`resourceVersion`](https://kubernetes.io/docs/reference/generated/federation/v1/definitions/) identifier
+is used to pick the leader.
 
 ```elixir
 config :libelection,
@@ -41,4 +75,4 @@ config :libelection,
 
 ## License
 
-GPLv3
+[GPLv3](https://github.com/QuiqUpLTD/libelection/blob/master/LICENSE.md)
