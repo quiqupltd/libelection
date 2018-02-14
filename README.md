@@ -1,5 +1,8 @@
 # Libelection
 
+[![Build Status](https://travis-ci.org/QuiqUpLTD/libelection.svg?branch=master)](https://travis-ci.org/QuiqUpLTD/libelection)
+[![Package Version](https://img.shields.io/hexpm/v/libelection.svg)](https://hex.pm/packages/libelection)
+
 Library to perform leader election in a cluster of containerized Elixir nodes.
 
 ## Installation
