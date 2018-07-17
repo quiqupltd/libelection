@@ -44,6 +44,11 @@ config :libelection, :list_nodes, {module, function, args}
 config :libelection, :list_nodes, &SomeModule.some_function/1
 ```
 
+Configure the logger
+```elixir
+config :libelection, :logger, %{level: :debug} # Default
+```
+
 ## Election Strategies
 
 ### Rancher
