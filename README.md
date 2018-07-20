@@ -1,3 +1,6 @@
+<p align="center"><img src="design/logo.png" alt="libelection" height="300px"></p>
+
+
 # Libelection
 
 [![Build Status](https://travis-ci.org/QuiqUpLTD/libelection.svg?branch=master)](https://travis-ci.org/QuiqUpLTD/libelection)
