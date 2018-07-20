@@ -1,9 +1,9 @@
 # Libelection
 
-[![Build Status](https://travis-ci.org/QuiqUpLTD/libelection.svg?branch=master)](https://travis-ci.org/QuiqUpLTD/libelection)
+[![Build Status](https://travis-ci.org/quiqupltd/libelection.svg?branch=master)](https://travis-ci.org/quiqupltd/libelection)
 [![Package Version](https://img.shields.io/hexpm/v/libelection.svg)](https://hex.pm/packages/libelection)
-[![Coverage](https://coveralls.io/repos/github/QuiqUpLTD/libelection/badge.svg?branch=master)](https://coveralls.io/repos/github/QuiqUpLTD/libelection)
-[![Inline docs](https://inch-ci.org/github/QuiqUpLTD/libelection.svg?branch=master)](https://inch-ci.org/github/QuiqUpLTD/libelection)
+[![Coverage](https://coveralls.io/repos/github/quiqupltd/libelection/badge.svg?branch=master)](https://coveralls.io/repos/github/quiqupltd/libelection)
+[![Inline docs](https://inch-ci.org/github/quiqupltd/libelection.svg?branch=master)](https://inch-ci.org/github/quiqupltd/libelection)
 
 Library to perform leader election in a cluster of containerized Elixir nodes.
 
@@ -80,4 +80,4 @@ config :libelection,
 
 ## License
 
-[GPLv3](https://github.com/QuiqUpLTD/libelection/blob/master/LICENSE.md)
+[GPLv3](https://github.com/quiqupltd/libelection/blob/master/LICENSE.md)

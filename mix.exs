@@ -50,7 +50,7 @@ defmodule Libelection.Mixfile do
     [files: ["lib", "mix.exs", "README.md", "LICENSE.md"],
      maintainers: ["Dimitris Zorbas"],
      licenses: ["GPLv3"],
-     links: %{"GitHub": "https://github.com/QuiqUpLTD/libelection"}]
+     links: %{"GitHub": "https://github.com/quiqupltd/libelection"}]
   end
 
   defp docs do
