@@ -14,7 +14,7 @@ Library to perform leader election in a cluster of containerized Elixir nodes.
 
 ```elixir
 def deps do
-  [{:libelection, "~> 0.3.0"}]
+  [{:libelection, "~> 1.0.0"}]
 end
 ```
 
