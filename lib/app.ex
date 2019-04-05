@@ -4,11 +4,11 @@ defmodule Election.App do
 
   import Supervisor.Spec, warn: false
 
+  alias Election.Config
+
   def start(_type, _args) do
-    Supervisor.start_link(child_specs(), [strategy: :one_for_one, name: Election.Supervisor])
+    Supervisor.start_link(child_specs(), strategy: :one_for_one, name: Election.Supervisor)
   end
 
-  defp child_specs, do: [worker(Election.Elector, [config()])]
-
-  defp config, do: Application.get_all_env(:libelection)
+  defp child_specs, do: [worker(Election.Elector, [Config.fetch_config()])]
 end

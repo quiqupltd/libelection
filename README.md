@@ -14,7 +14,7 @@ Library to perform leader election in a cluster of containerized Elixir nodes.
 
 ```elixir
 def deps do
-  [{:libelection, "~> 0.2.0"}]
+  [{:libelection, "~> 0.3.0"}]
 end
 ```
 
@@ -51,6 +51,8 @@ Configure the logger
 ```elixir
 config :libelection, :logger, %{level: :debug} # Default
 ```
+
+*Note:* The configuration also supports [confex](https://hex.pm/packages/confex) style configurations.
 
 ## Election Strategies
 

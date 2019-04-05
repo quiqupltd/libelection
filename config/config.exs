@@ -28,6 +28,12 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 
-if File.exists?(Path.join("config", "#{Mix.env}.exs")) do
-  import_config "#{Mix.env}.exs"
+config :libelection,
+  strategy: Election.Strategy.Kubernetes,
+  kubernetes_selector: "K8S_SELECTOR",
+  kubernetes_node_basename: "K8S_NODE_BASENAME",
+  logger: %{level: :info}
+
+if File.exists?(Path.join("config", "#{Mix.env()}.exs")) do
+  import_config "#{Mix.env()}.exs"
 end
