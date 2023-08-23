@@ -43,7 +43,7 @@ defmodule Libelection.Mixfile do
   defp deps do
     [
       {:poison, "~> 3.0"},
-      {:ex_doc, "~> 0.19", only: :dev},
+      {:ex_doc, "~> 0.30.5", only: :dev},
       {:dialyxir, "~> 0.3", only: :dev},
       {:credo, "~> 0.8", only: [:dev, :test]},
       {:bypass, github: "PSPDFKit-labs/bypass", only: :test},
