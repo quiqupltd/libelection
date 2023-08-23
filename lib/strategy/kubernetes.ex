@@ -69,7 +69,7 @@ defmodule Election.Strategy.Kubernetes do
         log(:warn, :kubernetes, "cannot query kubernetes (unauthorized): #{inspect(body)}")
         {:error, :unauthorized}
 
-      {:response, other} ->
+      {:response, _} ->
         {:error, :invalid_response}
     end
   end
@@ -89,7 +89,7 @@ defmodule Election.Strategy.Kubernetes do
               Enum.flat_map(subsets, fn
                 %{"addresses" => addresses} ->
                   # credo:disable-for-next-line Credo.Check.Refactor.Nesting
-                  Enum.map(addresses, fn %{"ip" => ip, "targetRef" => targetRef} ->
+                  Enum.map(addresses, fn %{"ip" => ip, "targetRef" => target_ref} ->
                     %{
                       create_index: resource_version(put_in(target_ref, ["ip"], ip)),
                       node: :"#{app_name}@#{ip}"
