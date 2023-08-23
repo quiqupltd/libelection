@@ -90,7 +90,10 @@ defmodule Election.Strategy.Kubernetes do
                 %{"addresses" => addresses} ->
                   # credo:disable-for-next-line Credo.Check.Refactor.Nesting
                   Enum.map(addresses, fn %{"ip" => ip, "targetRef" => targetRef} ->
-                    %{create_index: resource_version(targetRef), node: :"#{app_name}@#{ip}"}
+                    %{
+                      create_index: resource_version(put_in(target_ref, ["ip"], ip)),
+                      node: :"#{app_name}@#{ip}"
+                    }
                   end)
 
                 _ ->
@@ -108,8 +111,8 @@ defmodule Election.Strategy.Kubernetes do
     end
   end
 
-  defp resource_version(%{"resourceVersion" => version}), do: String.to_integer(version)
-  defp resource_version(_), do: 1
+  defp resource_version(%{"resourceVersion" => version}) when not is_nil(version), do: version
+  defp resource_version(%{"ip" => ip}), do: ip
 
   @spec token() :: String.t()
   defp token, do: service_file("token")
